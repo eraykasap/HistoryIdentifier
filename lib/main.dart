@@ -58,9 +58,32 @@ class _BottomNavBarCustomState extends State<BottomNavBarCustom> {
       
       backgroundColor: Colors.grey.shade200,
 
-      body: allPages[selectedIndex],
+      body: Stack(
+        children: [
 
-      bottomNavigationBar: SafeArea(
+          allPages[selectedIndex],
+          
+          //! BOTTOM NAV BAR
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: bottomNavgationBar((value) {
+              setState(() {
+                selectedIndex = value;
+              });
+            }),
+          ),
+          
+        ],
+      ),
+
+
+    );
+  }
+}
+
+
+Widget bottomNavgationBar (Function(int) onSelect) {
+  return SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Container(
@@ -70,7 +93,9 @@ class _BottomNavBarCustomState extends State<BottomNavBarCustom> {
             ),
             child: GNav(
               
-              tabBackgroundColor: Colors.blue,
+              tabBackgroundColor: Colors.black,
+              color: Colors.black,
+              activeColor: Colors.white,
               //backgroundColor: Colors.white,
               iconSize: 34,
               tabBorderRadius: 24,
@@ -90,18 +115,15 @@ class _BottomNavBarCustomState extends State<BottomNavBarCustom> {
                   icon: Icons.person_outline,
                   text: "Profile",
                 )
-              ]
+              ],
+                onTabChange: (value) {
+                  onSelect(value);
+                }
             ),
+            
           ),
         ),
-      ),
-    );
-  }
-}
-
-
-Widget bottomNavgationBar () {
-  return Container();
+      );
 }
 
 

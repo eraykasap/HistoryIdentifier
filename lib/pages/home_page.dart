@@ -6,15 +6,46 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        width: 100,
-        height: 100,
-        //color: Colors.amber,
-        child: Text("Home Page"),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(24),
-          color: Colors.amber
+    return SafeArea(
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          child: Column(
+            spacing: 10,
+            children: [
+          
+              //! TEXT BUTTON
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: TextButton(
+                    onPressed: () {
+                
+                  }, child: Icon(Icons.photo_camera_outlined, size: 35,),
+                  style: TextButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    foregroundColor: Colors.black,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadiusGeometry.circular(24)
+                    )
+                  ),
+                ),
+              ),
+              
+              Container(
+                width: 200,
+                height: 200,
+                color: Colors.amber,
+              ),
+
+              
+              
+              
+              
+          
+          
+            ],
+          ),
         ),
       ),
     );
