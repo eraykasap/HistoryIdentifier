@@ -56,7 +56,7 @@ class _BottomNavBarCustomState extends State<BottomNavBarCustom> {
     return Scaffold(
 
       
-      backgroundColor: Colors.grey.shade300,
+      backgroundColor: Colors.grey.shade200,
 
       body: allPages[selectedIndex],
 
