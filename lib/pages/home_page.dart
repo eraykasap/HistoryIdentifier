@@ -14,6 +14,7 @@ class HomePage extends StatelessWidget {
             spacing: 10,
             children: [
           
+          
               //! TEXT BUTTON
               SizedBox(
                 width: double.infinity,
@@ -32,12 +33,8 @@ class HomePage extends StatelessWidget {
                 ),
               ),
               
-              Container(
-                width: 200,
-                height: 200,
-                color: Colors.amber,
-              ),
-
+              
+              
               
               
               
