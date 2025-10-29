@@ -1,10 +1,13 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:history_identifier/pages/home_page.dart';
 import 'package:history_identifier/pages/photo_page.dart';
 import 'package:history_identifier/pages/profile_page.dart';
 
 void main() {
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarColor: Colors.transparent));
   runApp(const MyApp());
 }
 
@@ -67,9 +70,16 @@ class _BottomNavBarCustomState extends State<BottomNavBarCustom> {
           Align(
             alignment: Alignment.bottomCenter,
             child: bottomNavgationBar((value) {
-              setState(() {
-                selectedIndex = value;
-              });
+
+              if (value != 1) {
+                setState(() {
+                  selectedIndex = value;
+                });
+              }
+              else {
+                Navigator.of(context).push(CupertinoPageRoute(builder: (context) => PhotoScannerPage()));
+              }
+              
             }),
           ),
           
