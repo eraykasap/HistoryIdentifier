@@ -29,13 +29,12 @@ class _PhotoScannerPageState extends State<PhotoScannerPage> {
   Future<void> _initializedCamera() async {
     final camera = await availableCameras();
     final firstCamera = camera.first;
-    
 
     _controller = CameraController(
       firstCamera,
       ResolutionPreset.high,
       enableAudio: false,
-      imageFormatGroup: ImageFormatGroup.jpeg
+      imageFormatGroup: ImageFormatGroup.jpeg,
     );
 
     await _controller!.initialize();
@@ -56,72 +55,80 @@ class _PhotoScannerPageState extends State<PhotoScannerPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Column(
-          children: [
-            Expanded(
-              child: _isCameraInitialized
-                  ? CameraPreview(_controller!)
-                  : const Center(child: CircularProgressIndicator()),
-            ),
-          ],
-        ),
 
-        SafeArea(
-          child: IconButton(
-            onPressed: () {
-              Navigator.of(
-                context,
-              ).push(CupertinoPageRoute(builder: (context) => MyApp()));
-            },
-            icon: Icon(Icons.arrow_back, size: 36, color: Colors.grey),
-          ),
-        ),
-
-        //! PHOTO BUTTON
-        SafeArea(
-          child: Align(
-            alignment: AlignmentGeometry.bottomCenter,
-            child: Container(
-              margin: EdgeInsets.only(bottom: 10),
-              child: Stack(
-                alignment: AlignmentGeometry.center,
-                children: [
-                  SizedBox(
-                    width: 115,
-                    height: 115,
-                    child: CircularProgressIndicator(
-                      value: 1,
-                      color: Colors.white,
-                      strokeWidth: 5,
-                    ),
-                  ),
-
-                  SizedBox(
-                    width: 95,
-                    height: 95,
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        await _takePicture();
-                        //Navigator.of(context).push(CupertinoPageRoute(builder: (context) => MyApp()));
-                      },
-                      child: Container(),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                      ),
-                    ),
-                  ),
-                ],
+    return SafeArea(
+      child: Stack(
+        children: [
+          Column(
+            children: [
+      
+              //SafeArea(child: SizedBox(height: 35,)),
+      
+              Expanded(
+                child: AspectRatio(
+                  aspectRatio: 4 / 3,
+                  child: _isCameraInitialized
+                      ? CameraPreview(_controller!)
+                      : const Center(child: CircularProgressIndicator()),
+                ),
               ),
+      
+              //! PHOTO BUTTON
+              Align(
+                alignment: AlignmentGeometry.bottomCenter,
+                child: Container(
+                  //color: Colors.amber,
+                  margin: EdgeInsets.symmetric(vertical: 35),
+                  child: Stack(
+                    alignment: AlignmentGeometry.center,
+                    children: [
+                      SizedBox(
+                        width: 115,
+                        height: 115,
+                        child: CircularProgressIndicator(
+                          value: 1,
+                          color: Colors.white,
+                          strokeWidth: 5,
+                        ),
+                      ),
+      
+                      SizedBox(
+                        width: 95,
+                        height: 95,
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            await _takePicture();
+                            //Navigator.of(context).push(CupertinoPageRoute(builder: (context) => MyApp()));
+                          },
+                          child: Container(),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+      
+      
+            ],
+          ),
+      
+          SafeArea(
+            child: IconButton(
+              onPressed: () {
+                Navigator.of(
+                  context,
+                ).push(CupertinoPageRoute(builder: (context) => MyApp()));
+              },
+              icon: Icon(Icons.arrow_back, size: 36, color: Colors.grey),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
-
-
 
   Future<void> _takePicture() async {
     print("ÇALIŞTI");
@@ -140,14 +147,8 @@ class _PhotoScannerPageState extends State<PhotoScannerPage> {
 
     await _controller!.pausePreview();
 
-    Navigator.of(context).push(CupertinoPageRoute(builder: (context) => PhotoPage(Myimage: imageFile)));
-
-    
-    
+    Navigator.of(context).push(
+      CupertinoPageRoute(builder: (context) => PhotoPage(Myimage: imageFile)),
+    );
   }
-
-
-
 }
-
-
