@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:history_identifier/main.dart';
+import 'package:history_identifier/pages/gecis_sayfas%C4%B1.dart';
+import 'package:history_identifier/pages/profile_page.dart';
 
 class PhotoScannerPage extends StatefulWidget {
   const PhotoScannerPage({super.key});
@@ -13,6 +17,7 @@ class PhotoScannerPage extends StatefulWidget {
 class _PhotoScannerPageState extends State<PhotoScannerPage> {
   CameraController? _controller;
   bool _isCameraInitialized = false;
+  bool _isCapturing = false;
 
   @override
   void initState() {
@@ -24,8 +29,14 @@ class _PhotoScannerPageState extends State<PhotoScannerPage> {
   Future<void> _initializedCamera() async {
     final camera = await availableCameras();
     final firstCamera = camera.first;
+    
 
-    _controller = CameraController(firstCamera, ResolutionPreset.high);
+    _controller = CameraController(
+      firstCamera,
+      ResolutionPreset.high,
+      enableAudio: false,
+      imageFormatGroup: ImageFormatGroup.jpeg
+    );
 
     await _controller!.initialize();
 
@@ -86,27 +97,57 @@ class _PhotoScannerPageState extends State<PhotoScannerPage> {
                       strokeWidth: 5,
                     ),
                   ),
-              
+
                   SizedBox(
                     width: 95,
                     height: 95,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        await _takePicture();
+                        //Navigator.of(context).push(CupertinoPageRoute(builder: (context) => MyApp()));
+                      },
                       child: Container(),
-                      style: ElevatedButton.styleFrom(backgroundColor: Colors.white),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
-            
           ),
         ),
-
-
       ],
     );
   }
 
-  Future<void> _takePicture() async {}
+
+
+  Future<void> _takePicture() async {
+    print("ÇALIŞTI");
+
+    /* if (_isCapturing) {
+      print("❌ Zaten çekim yapılıyor, atlanıyor...");
+      return; // Burada metot sonlanır
+    } */
+
+    /* setState(() {+
+      _isCapturing = true;
+    }); */
+
+    final image = await _controller!.takePicture();
+    File imageFile = File(image.path);
+
+    await _controller!.pausePreview();
+
+    Navigator.of(context).push(CupertinoPageRoute(builder: (context) => PhotoPage(Myimage: imageFile)));
+
+    
+    
+  }
+
+
+
 }
+
+
