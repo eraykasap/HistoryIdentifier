@@ -15,6 +15,7 @@ class PhotoScannerPage extends StatefulWidget {
 }
 
 class _PhotoScannerPageState extends State<PhotoScannerPage> {
+
   CameraController? _controller;
   bool _isCameraInitialized = false;
   bool _isCapturing = false;
@@ -44,6 +45,9 @@ class _PhotoScannerPageState extends State<PhotoScannerPage> {
         _isCameraInitialized = true;
       });
     }
+
+    
+
   }
 
   @override
@@ -55,24 +59,41 @@ class _PhotoScannerPageState extends State<PhotoScannerPage> {
 
   @override
   Widget build(BuildContext context) {
-
+    
     return SafeArea(
       child: Stack(
         children: [
           Column(
             children: [
-      
-              //SafeArea(child: SizedBox(height: 35,)),
-      
+
+              Container(
+                width: double.maxFinite,
+                height: 55,
+                color: Colors.amber,
+                child: Row(
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        Navigator.of(
+                          context,
+                        ).push(CupertinoPageRoute(builder: (context) => MyApp()));
+                      },
+                      icon: Icon(Icons.arrow_back, size: 36, color: Colors.grey),
+                    ),
+                  ],
+                ),
+              ),
+
+
               Expanded(
                 child: AspectRatio(
-                  aspectRatio: 4 / 3,
+                  aspectRatio: 3 / 4,
                   child: _isCameraInitialized
                       ? CameraPreview(_controller!)
                       : const Center(child: CircularProgressIndicator()),
                 ),
               ),
-      
+
               //! PHOTO BUTTON
               Align(
                 alignment: AlignmentGeometry.bottomCenter,
@@ -91,7 +112,7 @@ class _PhotoScannerPageState extends State<PhotoScannerPage> {
                           strokeWidth: 5,
                         ),
                       ),
-      
+
                       SizedBox(
                         width: 95,
                         height: 95,
@@ -110,20 +131,9 @@ class _PhotoScannerPageState extends State<PhotoScannerPage> {
                   ),
                 ),
               ),
-      
-      
+            
+            
             ],
-          ),
-      
-          SafeArea(
-            child: IconButton(
-              onPressed: () {
-                Navigator.of(
-                  context,
-                ).push(CupertinoPageRoute(builder: (context) => MyApp()));
-              },
-              icon: Icon(Icons.arrow_back, size: 36, color: Colors.grey),
-            ),
           ),
         ],
       ),
@@ -148,7 +158,9 @@ class _PhotoScannerPageState extends State<PhotoScannerPage> {
     await _controller!.pausePreview();
 
     Navigator.of(context).push(
-      CupertinoPageRoute(builder: (context) => PhotoPage(Myimage: imageFile)),
+      CupertinoPageRoute(builder: (context) => PhotoAIanalizPage(Myimage: imageFile)),
     );
+
+    _controller!.resumePreview();
   }
 }

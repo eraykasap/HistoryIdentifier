@@ -38,6 +38,7 @@ dependencies:
   gap: ^3.0.1
   camera: ^0.11.3
   riverpod: ^3.0.3
+  
 
 dev_dependencies:
   flutter_test:

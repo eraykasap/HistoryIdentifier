@@ -4,12 +4,12 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class PhotoPage extends StatelessWidget {
+class PhotoAIanalizPage extends StatelessWidget {
 
   final File Myimage;
 
 
-  const PhotoPage({
+  const PhotoAIanalizPage({
     super.key,
     required this.Myimage
   });
@@ -19,10 +19,11 @@ class PhotoPage extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: Container(
-          //color: Colors.amber,
-          width: 400,
-          height: 400,
-          child: Image.file(Myimage, ),
+          color: Colors.amber,
+          child: AspectRatio(
+            aspectRatio: 4/5 ,
+            child: ClipRect(child: Image.file(Myimage, fit: BoxFit.cover,))
+          ),
         ),
       ),
     );
