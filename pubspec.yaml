@@ -37,7 +37,10 @@ dependencies:
   google_nav_bar: ^5.0.7
   gap: ^3.0.1
   camera: ^0.11.3
-  riverpod: ^3.0.3
+  
+  google_generative_ai: ^0.4.7
+  flutter_riverpod: ^3.0.3
+  
   
 
 dev_dependencies:

@@ -1,14 +1,22 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+
 import 'package:history_identifier/pages/home_page.dart';
 import 'package:history_identifier/pages/photo_page.dart';
 import 'package:history_identifier/pages/profile_page.dart';
 
+
+
+
+
 void main() {
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarColor: Colors.transparent));
-  runApp(const MyApp());
+  SystemChrome.setSystemUIOverlayStyle(
+    SystemUiOverlayStyle(statusBarColor: Colors.transparent),
+  );
+  runApp(ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -19,13 +27,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      
-      
-      home: const BottomNavBarCustom(),
+
+      home: BottomNavBarCustom(),
     );
   }
 }
-
 
 class BottomNavBarCustom extends StatefulWidget {
   const BottomNavBarCustom({super.key});
@@ -37,6 +43,7 @@ class BottomNavBarCustom extends StatefulWidget {
 class _BottomNavBarCustomState extends State<BottomNavBarCustom> {
 
   int selectedIndex = 0;
+  
 
   late PhotoScannerPage photoScannerPage;
   late HomePage homePage;
@@ -50,92 +57,109 @@ class _BottomNavBarCustomState extends State<BottomNavBarCustom> {
     photoScannerPage = PhotoScannerPage();
     homePage = HomePage();
     profilePage = ProfilePage();
-    allPages = [homePage, photoScannerPage, profilePage];
+    allPages = [homePage, profilePage];
   }
-  
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
-
-      
       backgroundColor: Colors.grey.shade200,
 
-      body: Stack(
-        children: [
+      body: allPages[selectedIndex],
 
-          allPages[selectedIndex],
-          
-          //! BOTTOM NAV BAR
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: bottomNavgationBar((value) {
-
-              if (value != 1) {
-                setState(() {
-                  selectedIndex = value;
-                });
-              }
-              else {
-                Navigator.of(context).push(CupertinoPageRoute(builder: (context) => PhotoScannerPage()));
-              }
-              
-            }),
-          ),
-          
-        ],
+      bottomNavigationBar: bottomNavgationBar(
+        selectedIndex, 
+        context,
+        (index) {
+          setState(() {
+            selectedIndex = index;
+          });
+        }
       ),
-
-      
 
     );
   }
 }
 
 
-Widget bottomNavgationBar (Function(int) onSelect) {
+
+Widget bottomNavgationBar(int selectindex, BuildContext context, Function(int) onSelect) {
+  
   return SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(24),
-              color: Colors.white
-            ),
-            child: GNav(
-              
-              tabBackgroundColor: Colors.black,
-              color: Colors.black,
-              activeColor: Colors.white,
-              //backgroundColor: Colors.white,
-              iconSize: 34,
-              tabBorderRadius: 24,
-              gap: 8,
-              //duration: Duration(microseconds: 1500),
-              tabMargin: const EdgeInsetsGeometry.symmetric(vertical: 6, horizontal: 6),
-              tabs: [
-                GButton(
-                  icon: Icons.home_outlined,
-                  text: "Home",
-                ),
-                GButton(
-                  icon: Icons.photo_camera_outlined,
-                  text: "Scan",
-                ),
-                GButton(
-                  icon: Icons.person_outline,
-                  text: "Profile",
-                )
-              ],
-                onTabChange: (value) {
-                  onSelect(value);
-                }
-            ),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          height: 95,
+          
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(24),
+            color: Colors.white,
+          ),
+          child: GNav(
             
+            selectedIndex: selectindex,
+            tabBackgroundColor: Colors.black,
+            color: Colors.black,
+            activeColor: Colors.white,
+            
+            iconSize: 34,
+            tabBorderRadius: 24,
+            gap: 8,
+            tabMargin: const EdgeInsetsGeometry.symmetric(
+              vertical: 6,
+              horizontal: 6,
+            ),
+            tabs: [
+              GButton(icon: Icons.home_outlined, text: "Home"), 
+              GButton(icon: Icons.person_outline, text: "Profile"),
+            ],
+            
+            onTabChange: (value) {
+              onSelect(value);
+            },
           ),
         ),
-      );
+
+        SizedBox(
+          width: 15,
+        ),
+
+        SizedBox(
+          height: 95,
+          child: ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).push(CupertinoPageRoute(builder: (context) => PhotoScannerPage()));
+            }, 
+            child: Row(children: [
+              Icon(Icons.photo_camera_outlined, size: 34, color: Colors.black,),
+              SizedBox(width: 8,),
+              Text("Scan", style: TextStyle(color: Colors.black),)
+            ],),
+            style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.circular(24)),
+              shadowColor: Colors.transparent,
+              backgroundColor: Colors.white,
+              overlayColor: Colors.grey.shade800
+            ),
+          ),
+        )
+
+
+
+      ],
+    ),
+  );
 }
+
+
+
+
+
+
+
+
 
 
 

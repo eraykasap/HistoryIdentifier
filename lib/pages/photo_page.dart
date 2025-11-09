@@ -1,11 +1,9 @@
 import 'dart:io';
-
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:history_identifier/main.dart';
 import 'package:history_identifier/pages/gecis_sayfas%C4%B1.dart';
-import 'package:history_identifier/pages/profile_page.dart';
+
 
 class PhotoScannerPage extends StatefulWidget {
   const PhotoScannerPage({super.key});
@@ -18,7 +16,7 @@ class _PhotoScannerPageState extends State<PhotoScannerPage> {
 
   CameraController? _controller;
   bool _isCameraInitialized = false;
-  bool _isCapturing = false;
+  FlashMode _currentFlashMode = FlashMode.off;
 
   @override
   void initState() {
@@ -46,8 +44,6 @@ class _PhotoScannerPageState extends State<PhotoScannerPage> {
       });
     }
 
-    
-
   }
 
   @override
@@ -65,38 +61,47 @@ class _PhotoScannerPageState extends State<PhotoScannerPage> {
         children: [
           Column(
             children: [
-
+    
+    
               Container(
                 width: double.maxFinite,
                 height: 55,
-                color: Colors.amber,
+                color: Colors.black,
+                padding: EdgeInsets.symmetric(horizontal: 15),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     IconButton(
                       onPressed: () {
-                        Navigator.of(
-                          context,
-                        ).push(CupertinoPageRoute(builder: (context) => MyApp()));
+                        Navigator.of(context).pop();
                       },
-                      icon: Icon(Icons.arrow_back, size: 36, color: Colors.grey),
+                      icon: Icon(Icons.arrow_back, size: 36, color: Colors.white),
                     ),
+    
+                    IconButton(
+                      onPressed: () {
+                        _toggleFlash();
+                      }, icon: _currentFlashMode == FlashMode.off ? 
+                      Icon(Icons.flash_off, color: Colors.white,) : 
+                      Icon(Icons.flash_on, color: Colors.white,)
+                    )
                   ],
                 ),
               ),
-
-
+    
+    
               Expanded(
                 child: AspectRatio(
                   aspectRatio: 3 / 4,
                   child: _isCameraInitialized
                       ? CameraPreview(_controller!)
-                      : const Center(child: CircularProgressIndicator()),
+                      : const Center(child: Text("Kamera Başlatma Hatası", style: TextStyle(color: Colors.white, fontSize: 24),)),
                 ),
               ),
-
+    
               //! PHOTO BUTTON
               Align(
-                alignment: AlignmentGeometry.bottomCenter,
+                alignment: Alignment.bottomCenter,
                 child: Container(
                   //color: Colors.amber,
                   margin: EdgeInsets.symmetric(vertical: 35),
@@ -112,14 +117,16 @@ class _PhotoScannerPageState extends State<PhotoScannerPage> {
                           strokeWidth: 5,
                         ),
                       ),
-
+    
                       SizedBox(
                         width: 95,
                         height: 95,
                         child: ElevatedButton(
                           onPressed: () async {
-                            await _takePicture();
-                            //Navigator.of(context).push(CupertinoPageRoute(builder: (context) => MyApp()));
+                            if (_isCameraInitialized) {
+                              await _takePicture();
+                            }
+                            
                           },
                           child: Container(),
                           style: ElevatedButton.styleFrom(
@@ -140,27 +147,44 @@ class _PhotoScannerPageState extends State<PhotoScannerPage> {
     );
   }
 
+
+
   Future<void> _takePicture() async {
-    print("ÇALIŞTI");
-
-    /* if (_isCapturing) {
-      print("❌ Zaten çekim yapılıyor, atlanıyor...");
-      return; // Burada metot sonlanır
-    } */
-
-    /* setState(() {+
-      _isCapturing = true;
-    }); */
 
     final image = await _controller!.takePicture();
     File imageFile = File(image.path);
 
     await _controller!.pausePreview();
 
-    Navigator.of(context).push(
-      CupertinoPageRoute(builder: (context) => PhotoAIanalizPage(Myimage: imageFile)),
-    );
+    Navigator.of(context).pushReplacement(CupertinoPageRoute(builder: (context) => PhotoAIanalizPage(Myimage: imageFile)),);
 
     _controller!.resumePreview();
   }
+
+
+  Future<void> _toggleFlash () async {
+
+    FlashMode newFlashMode;
+
+    if (_currentFlashMode == FlashMode.off) {
+      
+      newFlashMode = FlashMode.torch;
+    }
+    else if (_currentFlashMode == FlashMode.torch) {
+      
+      newFlashMode = FlashMode.off;
+    }
+    else {
+      newFlashMode = FlashMode.off;
+    }
+
+    await _controller!.setFlashMode(newFlashMode);
+
+    setState(() {
+      _currentFlashMode = newFlashMode;
+    });
+
+  }
+
+
 }
