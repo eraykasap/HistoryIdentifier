@@ -25,7 +25,7 @@ class DetaySayfasi extends ConsumerWidget {
 
           SafeArea(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(10, 15, 0, 0),
+              padding: const EdgeInsets.fromLTRB(10, 5, 0, 0),
               child: Align(
                 alignment: AlignmentGeometry.centerLeft,
                 child: IconButton(onPressed: () {
@@ -34,6 +34,7 @@ class DetaySayfasi extends ConsumerWidget {
               ),
             )
           ),
+          
 
           Expanded(
             child: SingleChildScrollView(
@@ -41,7 +42,7 @@ class DetaySayfasi extends ConsumerWidget {
                 children: [
               
                   image != null ? 
-                  Image.file(image, height: 600, width: double.maxFinite, fit: BoxFit.cover,) : 
+                  Image.file(image, height: 450, width: double.maxFinite, fit: BoxFit.cover,) : 
                   CircularProgressIndicator(),
               
                   ListView.builder(

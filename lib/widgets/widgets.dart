@@ -19,15 +19,17 @@ class ContentModelWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: Column(
-        children: [
-          //Image.file(takenImage),
-          SizedBox(height: 10,),
-          SelectableText(title),
-          SizedBox(height: 10,),
-          SelectableText(content),
-          SizedBox(height: 35,)
-        ],
+      child: SelectionArea(
+        child: Column(
+          children: [
+            //Image.file(takenImage),
+            SizedBox(height: 10,),
+            Text(title),
+            SizedBox(height: 10,),
+            Text(content),
+            SizedBox(height: 35,)
+          ],
+        ),
       ),
     );
   }

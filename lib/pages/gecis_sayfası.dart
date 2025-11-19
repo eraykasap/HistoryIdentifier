@@ -57,11 +57,11 @@ class _PhotoAIanalizPageState extends ConsumerState<PhotoAIanalizPage> {
       body: Stack(
         children: [ 
           Center(
-            child: Container(
-              //color: Colors.amber,
+            child: Expanded(
               child: AspectRatio(
-                aspectRatio: 4/5 ,
-                child: ClipRect(child: Image.file(widget.Myimage, fit: BoxFit.cover,))
+                aspectRatio: 9/16,
+                child:Image.file(widget.Myimage)
+                 /*ClipRect(child: Image.file(widget.Myimage, fit: BoxFit.cover,))*/
               ),
             ),
           ),
@@ -71,7 +71,7 @@ class _PhotoAIanalizPageState extends ConsumerState<PhotoAIanalizPage> {
             height: double.maxFinite,
             color: Colors.black.withAlpha(80),
             child: Center(
-              child: CircularProgressIndicator(),
+              child: analizEdiliyor ? CircularProgressIndicator() : Container(),
             ),
           )
 
@@ -93,12 +93,24 @@ class _PhotoAIanalizPageState extends ConsumerState<PhotoAIanalizPage> {
         Navigator.of(context).pushReplacement(CupertinoPageRoute(builder: (context) => DetaySayfasi()));
       }
       else {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Bir sorun oluştu. Lütfen tekrar deneyin")));
-        Navigator.of(context).pushReplacement(CupertinoPageRoute(builder: (context) => MyApp()));
+        print("--------- LİSTE HATASI ---------");
+        setState(() {
+          analizEdiliyor = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(duration: Duration(seconds: 2), content: Text("Bir sorun oluştu. Lütfen tekrar deneyin"))).closed.then((_) {
+          Navigator.of(context).pushReplacement(CupertinoPageRoute(builder: (context) => MyApp()));
+        });
+        
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Bir sorun oluştu. Lütfen tekrar deneyin")));
-      Navigator.of(context).pushReplacement(CupertinoPageRoute(builder: (context) => MyApp()));
+      print("--------- CACHE HATASI ---------");
+      setState(() {
+        analizEdiliyor = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(duration: Duration(seconds: 2), content: Text("Bir sorun oluştu. Lütfen tekrar deneyin"))).closed.then((_) {
+        Navigator.of(context).pushReplacement(CupertinoPageRoute(builder: (context) => MyApp()));
+      });
+      
     }
     
 
